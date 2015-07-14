@@ -1,3 +1,4 @@
+;;;; Builds Reagent interface for competition field declaration
 (ns compositor.fields
   (:require [reagent.core :as reagent :refer [atom]]
             [ajax.core :refer [POST]]))
@@ -6,7 +7,8 @@
 (defonce fields (atom (sorted-map)))
 (defonce counter (atom 0))
 
-(defn- name-input 
+(defn name-input
+  "Returns an element that edits the name of the competition"
   []
   [:input.form-control {:type "text" 
                         :placeholder "Our Rad Competition Name"
@@ -15,7 +17,7 @@
                                                           .-target
                                                           .-value))}])
 
-(defn- add-field
+(defn add-field
   "A new competition field, initalizes values to nil"
   []
   (let [id (swap! counter inc)]
@@ -28,12 +30,12 @@
                             :upper-bound nil
                             :negative? nil})))
 
-(defn- delete-field
+(defn delete-field
   "Removes a field from our list field-list by id"
   [id]
   (swap! fields dissoc id))
 
-(defn- field-name
+(defn field-name
   "Returns an element containing the name of a field"
   [id fname]
   [:div.form-group
@@ -44,7 +46,7 @@
                                                                             .-target
                                                                             .-value))}]])
 
-(defn- field-type
+(defn field-type
   "Returns an element specifying the type of a field"
   [id ftype]
   [:div.form-group
@@ -58,7 +60,7 @@
     [:option {:value "double"} "Decimal Number"]
     [:option {:value "boolean"} "Yes/No"]]])
 
-(defn- number-attrs
+(defn number-attrs
   "Returns elements specifying attributes of a number field-type"
   [id ftype lower-bound upper-bound negative?]
   (when (or (= "integer" ftype) (= "double" ftype))
@@ -97,7 +99,7 @@
                                                                               .-target
                                                                               .-value))}]]))
 
-(defn- field-comms
+(defn field-comms
   "Returns an element specifying field comments"
   [id comms]
   [:textarea.form-control {:rows 3 
@@ -107,7 +109,7 @@
                                                                              .-target
                                                                              .-value))}])
 
-(defn- field-item
+(defn field-item
   "Returns an element specifying all aspects of a field" 
   [{:keys [id fname ftype enums comms lower-bound upper-bound negative?]}]
   [:div.row
@@ -129,16 +131,18 @@
      [:div.col-xs-9
       (field-comms id comms)]]]])
 
-(defonce init (add-field)) ;; an initial field
 
-(defn- submit-fields
+(defn submit-fields
   "Submits a POST request with a JSON encoding of the fields"
   [fields]
   (POST "/api/new-comp"
         {:params {:body (vals fields)}
          :response-format :json}))
 
-(defn comp-app 
+(defonce init (add-field)) ;; an initial field
+
+(defn fields-declaration-app
+  "Competition field declaration component"
   [props]
   (let [comp-name @comp-name
         fields (vals @fields)]
