@@ -1,0 +1,10 @@
+.form-inline .form-group {
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+}
+
+.danger {
+    color: rgb(217, 83, 79);
+}
