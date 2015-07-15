@@ -11,3 +11,4 @@ pom.xml
 .lein-env
 *.swp
 /resources/public/js/out
+.lein-repl-history
