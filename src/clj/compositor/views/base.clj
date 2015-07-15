@@ -24,6 +24,8 @@
          [:a {:href "#"}
           [:span.btn.btn-primary "Register"]]]]]]]))
 
+
+
 (defn login
   [& body]
   (html5
@@ -33,11 +35,17 @@
      [:div.container.fluid
       [:div.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
        [:div.jumbotron
-        [:form.navbar-form.navbar-right {:method "post" :role "login"}
+        [:p "Login"]
+        [:form {:method "post" :role "login"}
          [:div.form-group
-          [:input.form-control {:type "text" :placeholder "Email" :name "username"}]
-          [:input.form-control {:type "password" :placeholder "Password" :name "password"}]]
-         [:input.btn.btn-default {:type "submit"}]]]]]]))
+          [:div.input-group
+           [:input.form-control {:type "text" :placeholder "Email" :name "username"}]]]
+         [:div.form-group
+          [:div.input-group
+           [:input.form-control {:type "password" :placeholder "Password" :name "password"}]]]
+         [:div.form-group
+          [:div.input-group
+           [:input.btn.btn-default {:type "submit"}]]]]]]]]))
 
 (defn page-404
   []
