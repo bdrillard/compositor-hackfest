@@ -1,4 +1,4 @@
-(ns compositor.views.layout
+(ns compositor.views.base
   (:require [hiccup.page :refer [html5 include-css include-js]]))
 
 (defn page-head
@@ -26,11 +26,12 @@
         [:li elem])]]]])
 
 (def nav-login
-  [:form.navbar-form.navbar-right {:role "login"}
-   [:div.form-group
-    [:input.form-control {:type "text" :placeholder "Email"}]
-    [:input.form-control {:type "password" :placeholder "Password"}]]
-   [:button.btn.btn-default {:type "submit"} "Login"]])
+  [:a {:href "/user"}
+   [:span.btn.btn-default "Login"]])
+
+(def nav-logout
+  [:a {:href "/logout"}
+   [:span.btn.btn-default "Logout"]])
 
 (defn home
   [& body]
@@ -50,12 +51,28 @@
          [:a {:href "#"}
           [:span.btn.btn-primary "Register"]]]]]]]))
 
-
-(defn new-comp [& body]
+(defn login
+  [& body]
   (html5
     (page-head)
     [:body
      (page-nav nil nil)
+     [:div.container.fluid
+      [:div.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
+       [:div.jumbotron
+        [:form.navbar-form.navbar-right {:method "post" :role "login"}
+         [:div.form-group
+          [:input.form-control {:type "text" :placeholder "Email" :name "username"}]
+          [:input.form-control {:type "password" :placeholder "Password" :name "password"}]]
+         [:input.btn.btn-default {:type "submit"}]]]]]
+     [:p body]]))
+
+(defn new-comp 
+  [& body]
+  (html5
+    (page-head)
+    [:body
+     (page-nav nil [nav-logout])
      [:div.container-fluid
       [:div.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
        [:div.panel.panel-primary
@@ -67,3 +84,19 @@
          [:h3.panel-title "Help"]]
         [:div.panel-body "Create new fields for data to be entered for your competition"]]]]
      [:script {:type "text/javascript"} "compositor.core.run()"]]))
+
+(defn page-404
+  []
+  (html5
+    (page-head)
+    [:body
+     (page-nav nil [nav-login])
+     [:h1 "404"]]))
+
+(defn page-403
+  []
+  (html5
+    (page-head)
+    [:body
+     (page-nav nil [nav-login])
+     [:h1 "403"]]))

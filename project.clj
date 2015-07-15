@@ -6,6 +6,8 @@
                  [compojure "1.1.6"]
                  [hiccup "1.0.5"]
                  [ring-server "0.3.1"]
+                 [buddy/buddy-auth "0.6.0"]
+                 [buddy/buddy-hashers "0.6.0"]
                  [yesql "0.4.2"]
                  [mysql/mysql-connector-java "5.1.36"]
                  ;; Clojurescript
