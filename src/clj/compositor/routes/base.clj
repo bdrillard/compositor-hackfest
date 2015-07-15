@@ -24,7 +24,7 @@
 
 (defn logout
   [request]
-  (-> (redirect "/login")
+  (-> (redirect "/")
       (assoc :session {})))
 
 (defn login-authenticate
