@@ -10,4 +10,4 @@
     (layout/home)))
 
 (defroutes user-routes
-  (GET "/" request (home request)))
+  (GET "/" [] home))

@@ -1,17 +1,25 @@
 (ns compositor.views.users
-  (:require [hiccup.page :refer [html5]]))
+  (:require [hiccup.page :refer [html5]]
+            [compositor.views.common :as common]))
+
+(def nav-logout
+  [:a {:href "/logout"}
+   [:span.btn.btn-default "Logout"]])
 
 (defn home
   []
   (html5
-    [:p "Hello, world!"]))
+    (common/page-head)
+    [:body
+     (common/page-nav nil [nav-logout])
+     [:p "Hello, world!"]]))
 
 (defn new-fields
   [& body]
   (html5
-    (page-head)
+    (common/page-head)
     [:body
-     (page-nav nil [nav-logout])
+     (common/page-nav nil [nav-logout])
      [:div.container-fluid
       [:div.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
        [:div.panel.panel-primary
