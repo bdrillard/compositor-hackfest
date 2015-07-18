@@ -30,4 +30,4 @@
         [:div.panel-heading
          [:h3.panel-title "Help"]]
         [:div.panel-body "Create new fields for data to be entered for your competition"]]]]
-     [:script {:type "text/javascript"} "compositor.core.run()"]]))
+     [:script {:type "text/javascript"} "compositor.core.fields()"]]))
