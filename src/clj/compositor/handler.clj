@@ -1,6 +1,7 @@
 (ns compositor.handler
   (:require [compojure.core :refer [defroutes routes]]
             [ring.util.response :refer [redirect]]
+            [ring.middleware.json :refer [wrap-json-response wrap-json-params]]
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.file-info :refer [wrap-file-info]]
@@ -36,9 +37,15 @@
 (def auth-backend
   (session-backend {:unauthorized-handler unauthorized-handler}))
 
+(defn logging [chain]
+  (fn [request]
+    (chain request)))
+
 (def app
   (-> (routes base-routes app-routes)
       (wrap-authorization auth-backend)
       (wrap-authentication auth-backend)
+      (wrap-json-params)
+      (wrap-json-response)
       (handler/site)
       (wrap-base-url)))
