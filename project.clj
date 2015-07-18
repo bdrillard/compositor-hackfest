@@ -3,16 +3,20 @@
                competition logic"
   :url "http://example.com/FIXME"
   :dependencies [[org.clojure/clojure "1.6.0"]
+                 ;; Clojure
                  [compojure "1.1.6"]
                  [hiccup "1.0.5"]
                  [ring-server "0.3.1"]
+                 [ring/ring-json "0.3.1"]
                  [buddy/buddy-auth "0.6.0"]
                  [buddy/buddy-hashers "0.6.0"]
                  [yesql "0.4.2"]
                  [mysql/mysql-connector-java "5.1.36"]
-                 ;; Clojurescript
+                 ;; ClojureScript
                  [org.clojure/clojurescript "0.0-3211"]
                  [reagent "0.5.0"]
+                 [reagent-forms "0.5.4"]
+                 [secretary "1.2.3"]
                  [cljs-ajax "0.3.13"]]
   :plugins [[lein-ring "0.8.12"]
             [lein-cljsbuild "1.0.6"]
