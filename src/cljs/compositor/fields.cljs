@@ -1,10 +1,10 @@
 ;;;; Builds Reagent interface for competition field declaration
 (ns compositor.fields
   (:require [reagent.core :as reagent :refer [atom]]
-            [ajax.core :refer [POST]]))
+            [ajax.core :refer [ajax-request json-request-format json-response-format]]))
 
-(defonce comp-name (atom nil))
-(defonce fields (atom (sorted-map)))
+(defonce compet-name (atom nil))
+(defonce compet-fields (atom (sorted-map)))
 (defonce counter (atom 0))
 
 (defn name-input
@@ -12,8 +12,8 @@
   []
   [:input.form-control {:type "text" 
                         :placeholder "Our Rad Competition Name"
-                        :value @comp-name
-                        :on-change #(reset! comp-name (-> %
+                        :value @compet-name
+                        :on-change #(reset! compet-name (-> %
                                                           .-target
                                                           .-value))}])
 
@@ -21,19 +21,19 @@
   "A new competition field, initalizes values to nil"
   []
   (let [id (swap! counter inc)]
-    (swap! fields assoc id {:id id
+    (swap! compet-fields assoc id {:id id
                             :fname nil
                             :ftype nil
                             :enums nil
                             :comms nil
                             :lower-bound nil
                             :upper-bound nil
-                            :negative? nil})))
+                            :negative? false})))
 
 (defn delete-field
   "Removes a field from our list field-list by id"
   [id]
-  (swap! fields dissoc id))
+  (swap! compet-fields dissoc id))
 
 (defn field-name
   "Returns an element containing the name of a field"
@@ -42,7 +42,7 @@
    [:input.form-control {:type "text"
                          :placeholder "Field name"
                          :value fname
-                         :on-change #(swap! fields assoc-in [id :fname] (-> %
+                         :on-change #(swap! compet-fields assoc-in [id :fname] (-> %
                                                                             .-target
                                                                             .-value))}]])
 
@@ -51,7 +51,7 @@
   [id ftype]
   [:div.form-group
    [:select.form-control {:value ftype
-                          :on-change #(swap! fields assoc-in [id :ftype] (-> %
+                          :on-change #(swap! compet-fields assoc-in [id :ftype] (-> %
                                                                              .-target
                                                                              .-value))}
     [:option {:value "" :disabled true} "Field type"]
@@ -69,20 +69,20 @@
       [:input.form-control {:type "number"
                             :placeholder "Lower bound"
                             :value lower-bound
-                            :on-change #(swap! fields assoc-in [id :lower-bound] (-> %
+                            :on-change #(swap! compet-fields assoc-in [id :lower-bound] (-> %
                                                                                      .-target
                                                                                      .-value))}]]
      [:div.form-group
       [:input.form-control {:type "number"
                             :placeholder "Upper bound"
                             :value upper-bound
-                            :on-change #(swap! fields assoc-in [id :upper-bound] (-> %
+                            :on-change #(swap! compet-fields assoc-in [id :upper-bound] (-> %
                                                                                      .-target
                                                                                      .-value))}]]
      [:div.checkbox
       [:input {:type "checkbox"
                :checked negative?
-               :on-change #(swap! fields assoc-in [id :negative?] (-> %
+               :on-change #(swap! compet-fields assoc-in [id :negative?] (-> %
                                                                       .-target
                                                                       .-checked))}
        "Can be negative?"]]]))
@@ -95,7 +95,7 @@
      [:input.form-control {:type "text"
                            :placeholder "Comma, Separated, Categories"
                            :value enums
-                           :on-change #(swap! fields assoc-in [id :enums] (-> %
+                           :on-change #(swap! compet-fields assoc-in [id :enums] (-> %
                                                                               .-target
                                                                               .-value))}]]))
 
@@ -105,7 +105,7 @@
   [:textarea.form-control {:rows 3 
                            :placeholder "Comments for our field, leave scoring notes for judges."
                            :value comms
-                           :on-change #(swap! fields assoc-in [id :comms] (-> %
+                           :on-change #(swap! compet-fields assoc-in [id :comms] (-> %
                                                                              .-target
                                                                              .-value))}])
 
@@ -131,21 +131,29 @@
      [:div.col-xs-9
       (field-comms id comms)]]]])
 
+(defn handler
+  [[ok response]]
+  (if ok
+    (.log js/console (str response))
+    (.error js/console (str response))))
 
 (defn submit-fields
-  "Submits a POST request with a JSON encoding of the fields"
-  [fields]
-  (POST "/api/new-comp"
-        {:params {:body (vals fields)}
-         :response-format :json}))
+  "Submits a PUT request with a JSON encoding of the fields"
+  [cname cfields]
+  (ajax-request {:uri "http://localhost:3000/user/compet"
+                 :method :put
+                 :params {:name cname
+                          :fields cfields}
+                 :handler handler
+                 :format (json-request-format)
+                 :response-format :raw}))
 
 (defonce init (add-field)) ;; an initial field
 
 (defn fields-declaration-app
   "Competition field declaration component"
   [props]
-  (let [comp-name @comp-name
-        fields (vals @fields)]
+  (let [fields (vals @compet-fields)]
     [:form.form-horizontal
      [:div.row
       [:div.form-group
@@ -153,11 +161,14 @@
        [:div.col-xs-9
         (name-input)]]]
      [:hr]
-     [:div.row
-      [:a.col-xs-2 {:href "#"}
-       [:span.btn.btn-success {:on-click #(add-field)} "Add Field"]]]
+     [:button.btn.btn-success {:type "button" 
+                               :on-click #(add-field)} 
+      "Add field"]
      (when (-> fields count pos?)
        (for [field fields]
          ^{:key (:id field)} [field-item field]))
      [:hr]
-     [:button.btn.btn-default.pull-right {:type "submit"} "Submit"]]))
+     [:button.btn.btn-default.pull-right {:type "button" 
+                                          :on-click #(submit-fields @compet-name 
+                                                                    (vals @compet-fields))} 
+      "Submit"]]))

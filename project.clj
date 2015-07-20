@@ -10,8 +10,11 @@
                  [ring/ring-json "0.3.1"]
                  [buddy/buddy-auth "0.6.0"]
                  [buddy/buddy-hashers "0.6.0"]
-                 [yesql "0.4.2"]
+                 [org.clojure/java.jdbc "0.3.7"]
+                 [java-jdbc/dsl "0.1.3"]
                  [mysql/mysql-connector-java "5.1.36"]
+                 [yesql "0.4.2"]
+                 [danlentz/clj-uuid "0.1.6"]
                  ;; ClojureScript
                  [org.clojure/clojurescript "0.0-3211"]
                  [reagent "0.5.0"]

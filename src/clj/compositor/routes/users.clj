@@ -1,5 +1,6 @@
 (ns compositor.routes.users
   (:require [buddy.auth :refer [authenticated? throw-unauthorized]]
+            [ring.util.response :refer [response]]
             [compojure.core :refer :all]
             [compositor.models.comps :as comps]
             [compositor.views.users :as layout]))
@@ -9,9 +10,23 @@
   [request]
   (if-not (authenticated? request)
     (throw-unauthorized)
-    (let [username (get-in request [:session :identity])
-          competitions (comps/get-competitions (name username))]
+    (let [username (-> request (get-in [:session :identity]) name)
+          competitions (comps/get-competitions username)]
       (layout/home competitions))))
 
+(defn new-compet
+  [request]
+  (if-not (authenticated? request)
+    (throw-unauthorized)
+    (layout/new-compet)))
+
+(defn create-compet
+  [request]
+  (let [username (-> request (get-in [:session :identity]) name)
+        params (:body request)]
+    (response {:body [(comps/create-compet username params)]})))
+  
 (defroutes user-routes
-  (GET "/" [] home))
+  (GET "/" [] home)
+  (GET "/compet" [] new-compet)
+  (PUT "/compet" [] create-compet))

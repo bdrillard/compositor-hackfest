@@ -23,7 +23,7 @@
          [:h3.panel-title "Competitions"]]
         [:div.panel-body
          [:div.btn-toolbar {:style "margin-bottom: 5px;"}
-          [:a.btn.btn-success.pull-right {:href "/user/comp"}
+          [:a.btn.btn-success.pull-right {:href "/user/compet"}
            [:span.glyphicon.glyphicon-plus]
            " New Competition"]]
          (if (seq comps)
@@ -37,12 +37,12 @@
                     comp-uuid (nth compet 1)
                     comp-fields (nth compet 2)]
                 [:tr
-                 [:td [:a {:href (str "/user/comp/" comp-uuid)} comp-name]]
+                 [:td [:a {:href (str "/user/compet" comp-uuid)} comp-name]]
                  [:td comp-uuid]
                  [:td (clojure.string/join ", " comp-fields)]]))]
            [:p "Bummer, you haven't made any competitions. We can fix that though!"])]]]]]))
 
-(defn new-fields
+(defn new-compet
   [& body]
   (html5
     (common/page-head)

@@ -3,7 +3,7 @@
             [buddy.hashers :refer [check encrypt]]
             [compojure.core :refer :all]
             [compositor.views.base :as layout]
-            [compositor.models.users :refer [get-password get-user create-user]]
+            [compositor.models.users :refer [get-user get-user create-user]]
             [compositor.routes.users :as user]))
 
 (defn home
@@ -38,7 +38,7 @@
   (let [username (get-in request [:form-params "username"])
         password (get-in request [:form-params "password"])
         session (:session request)
-        found-password (get-password username)
+        found-password (-> username (get-user) :password)
         errors (cond
                  (not found-password) {:username "The given email is not registered"}
                  (not (check password found-password)) {:password "Incorrect password"}
