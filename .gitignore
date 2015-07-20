@@ -12,3 +12,4 @@ pom.xml
 *.swp
 /resources/public/js/out
 .lein-repl-history
+.nrepl-port
