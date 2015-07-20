@@ -6,14 +6,7 @@
 
 (defn get-user
   [username]
-  (select-user mysql-db username))
-
-(defn get-password
-  "Gets the password hash for a given username"
-  [username]
-  (-> (select-password mysql-db username)
-      (first) ; we know that usernames will be unique, take the first selected row
-      (:password)))
+  (first (select-user mysql-db username)))
 
 (defn create-user
   "Registers a username and their hashed password

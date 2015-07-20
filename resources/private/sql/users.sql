@@ -13,11 +13,6 @@ CREATE TABLE IF NOT EXISTS users (
 SELECT * FROM users
     WHERE email = :username
 
--- name: select-password
--- Gets password for a given username
-SELECT password FROM users 
-    WHERE email = :username
-
 -- name: insert-user!
 -- Inerts a user into the users table
 INSERT INTO users (id, email, password)
