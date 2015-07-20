@@ -13,12 +13,6 @@ CREATE TABLE IF NOT EXISTS comps (
         ON UPDATE CASCADE ON DELETE CASCADE
 )
 
--- name: insert-comp!
--- Creates a new competition
-INSERT INTO comps (id, uuid, user_id, comp_name)
-    VALUES (NULL, :uuid, :user_id, :comp_name);
-SELECT LAST_INSERT_ID() AS id;
-
 -- name: select-comps
 -- Gets a list of competitions and their fields registered to a user
 SELECT comps.comp_name AS comp_name, comps.uuid AS uuid, num_fields.name AS field_name
