@@ -1,5 +1,5 @@
 (ns compositor.views.users
-  (:require [hiccup.page :refer [html5]]
+  (:require [hiccup.page :refer [html5 include-css include-js]]
             [compositor.views.common :as common]))
 
 (def nav-logout
@@ -37,7 +37,7 @@
                     comp-uuid (nth compet 1)
                     comp-fields (nth compet 2)]
                 [:tr
-                 [:td [:a {:href (str "/user/compet" comp-uuid)} comp-name]]
+                 [:td [:a {:href (str "/user/compet/" comp-uuid)} comp-name]]
                  [:td comp-uuid]
                  [:td (clojure.string/join ", " comp-fields)]]))]
            [:p "Bummer, you haven't made any competitions. We can fix that though!"])]]]]]))
@@ -59,3 +59,19 @@
          [:h3.panel-title "Help"]]
         [:div.panel-body "Create new fields for data to be entered for your competition"]]]]
      [:script {:type "text/javascript"} "compositor.core.fields()"]]))
+
+(defn new-graph
+  [uuid & body]
+  (html5
+    (common/page-head)
+    (include-css "/css/jquery-ui.min.css")
+    (include-js "/js/jquery-ui.min.js")
+    [:body
+     (common/page-nav nil nav-logout)
+     [:div.container-fluid
+      [:div#blocks.row]
+      [:canvas#cvs {:width "1000px" :height "1000px" :style (str "overflow: hidden")}]
+      [:div#editor.row]
+      [:div#toolbar.row]]
+     [:script {:type "text/javascript"} "compositor.core.editor()"]
+     [:input#uuid.hidden {:type "text" :value uuid}]]))

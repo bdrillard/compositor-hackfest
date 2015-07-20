@@ -25,8 +25,16 @@
   (let [username (-> request (get-in [:session :identity]) name)
         params (:body request)]
     (response {:body [(comps/create-compet username params)]})))
+
+(defn new-graph
+  [request]
+  (if-not (authenticated? request)
+    (throw-unauthorized)
+    (let [id (get-in request [:route-params :id])]
+      (layout/new-graph id request))))
   
 (defroutes user-routes
   (GET "/" [] home)
   (GET "/compet" [] new-compet)
-  (PUT "/compet" [] create-compet))
+  (PUT "/compet" [] create-compet)
+  (GET "/graph/:id" [] new-graph))

@@ -52,13 +52,14 @@
   [:div.form-group
    [:select.form-control {:value ftype
                           :on-change #(swap! compet-fields assoc-in [id :ftype] (-> %
-                                                                             .-target
-                                                                             .-value))}
-    [:option {:value "" :disabled true} "Field type"]
-    [:option {:value "enum"} "Categories"]
-    [:option {:value "integer"} "Whole Number"]
-    [:option {:value "double"} "Decimal Number"]
-    [:option {:value "boolean"} "Yes/No"]]])
+                                                                                    .-target
+                                                                                    .-value))}
+    [:div
+     [:option {:value "" :disabled true} "Field type"]
+     [:option {:value "enum"} "Categories"]
+     [:option {:value "integer"} "Whole Number"]
+     [:option {:value "double"} "Decimal Number"]
+     [:option {:value "boolean"} "Yes/No"]]]])
 
 (defn number-attrs
   "Returns elements specifying attributes of a number field-type"
